@@ -1,16 +1,23 @@
 import { fetchBeer } from "@/api/fetchBeer";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  UseInfiniteQueryOptions,
+} from "@tanstack/react-query";
+
+export const beersQueryKey = () => ["beers"];
+
+export const options = {
+  queryKey: beersQueryKey(),
+  queryFn: (data) => {
+    return fetchBeer({
+      page: data.pageParam,
+    });
+  },
+  getNextPageParam: (lastPage) => {
+    return (lastPage as { beers: []; nextPage: null | number }).nextPage;
+  },
+} satisfies UseInfiniteQueryOptions;
 
 export const useBeers = () => {
-  return useInfiniteQuery({
-    queryKey: ["beers"],
-    queryFn: (data) => {
-      return fetchBeer({
-        page: data.pageParam,
-      });
-    },
-    getNextPageParam: (lastPage) => {
-      return lastPage.nextPage;
-    },
-  });
+  return useInfiniteQuery(options);
 };

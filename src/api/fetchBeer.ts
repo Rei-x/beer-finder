@@ -3,13 +3,32 @@ import { Convert } from "./transformer";
 export const fetchBeer = async ({
   page = 1,
   perPage = 25,
+  beerName,
+  ids,
 }: {
   page?: number;
   perPage?: number;
+  beerName?: string;
+  ids?: string | string[];
 }) => {
+  let additionalParams = {};
+
+  if (beerName) {
+    additionalParams = {
+      beer_name: beerName,
+    };
+  }
+
+  if (ids) {
+    additionalParams = {
+      ids: Array.isArray(ids) ? ids.join("|") : ids,
+    };
+  }
+
   const params = new URLSearchParams({
     page: page?.toString(),
     per_page: perPage?.toString(),
+    ...additionalParams,
   });
 
   const data = await fetch(`https://api.punkapi.com/v2/beers?${params}`);
