@@ -9,6 +9,7 @@ import { Ebc2Hex } from "@/lib/ebc2hex";
 import { GetColorName } from "hex-color-to-color-name";
 import { Card } from "react-daisyui";
 import { Link } from "@/components/Link";
+import { imageClient } from "@/api/imageClient";
 
 const Stats = ({ beer }: { beer: Beer }) => {
   return (
@@ -86,8 +87,8 @@ const Beer = ({
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
   return (
     <Layout>
-      <div className="max-w-6xl mx-auto prose mt-12">
-        <Link href="/">Back</Link>
+      <div className="max-w-6xl mx-auto prose mt-12 pb-32">
+        <Link href="/app">Back</Link>
         <div className="flex justify-between items-start pr-16">
           <div className="max-w-5xl pr-16">
             <h1>{beer.name}</h1>
@@ -183,54 +184,54 @@ export const getStaticProps = async (
 
   const { foodPairing } = firstBeer;
 
-  // const imagesForFoodPairings = await Promise.all(
-  //   foodPairing.map(async (food) => {
-  //     const image = await imageClient.photos.search({
-  //       query: food,
-  //       orientation: "landscape",
-  //       size: "small",
-  //       per_page: 1,
-  //     });
+  const imagesForFoodPairings = await Promise.all(
+    foodPairing.map(async (food) => {
+      const image = await imageClient.photos.search({
+        query: food,
+        orientation: "landscape",
+        size: "small",
+        per_page: 1,
+      });
 
-  //     if ("error" in image) {
-  //       return null;
-  //     }
+      if ("error" in image) {
+        return null;
+      }
 
-  //     const imageUrl = image.photos.at(0)?.src.landscape;
+      const imageUrl = image.photos.at(0)?.src.landscape;
 
-  //     if (!imageUrl) {
-  //       return null;
-  //     }
+      if (!imageUrl) {
+        return null;
+      }
 
-  //     return {
-  //       food,
-  //       image: imageUrl,
-  //     };
-  //   })
-  // );
+      return {
+        food,
+        image: imageUrl,
+      };
+    })
+  );
 
-  const imagesForFoodPairings = [
-    {
-      food: "Mario",
-      image:
-        "https://images.pexels.com/photos/2160296/pexels-photo-2160296.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    },
-    {
-      food: "Chleb",
-      image:
-        "https://images.pexels.com/photos/14089729/pexels-photo-14089729.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    },
-    {
-      food: "Luigi",
-      image:
-        "https://images.pexels.com/photos/1552641/pexels-photo-1552641.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    },
-    {
-      food: "Tosty",
-      image:
-        "https://images.pexels.com/photos/3075556/pexels-photo-3075556.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    },
-  ];
+  // const imagesForFoodPairings = [
+  //   {
+  //     food: "Mario",
+  //     image:
+  //       "https://images.pexels.com/photos/2160296/pexels-photo-2160296.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+  //   },
+  //   {
+  //     food: "Chleb",
+  //     image:
+  //       "https://images.pexels.com/photos/14089729/pexels-photo-14089729.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+  //   },
+  //   {
+  //     food: "Luigi",
+  //     image:
+  //       "https://images.pexels.com/photos/1552641/pexels-photo-1552641.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+  //   },
+  //   {
+  //     food: "Tosty",
+  //     image:
+  //       "https://images.pexels.com/photos/3075556/pexels-photo-3075556.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+  //   },
+  // ];
 
   return {
     props: {

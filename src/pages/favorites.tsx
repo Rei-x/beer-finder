@@ -8,10 +8,15 @@ const Favorites = () => {
 
   return (
     <Layout>
-      <div className="mt-14 max-w-5xl mx-12 flex-wrap flex justify-center items-center">
-        {favoriteBeers.data?.beers.map((beer) => (
-          <BeerCard key={beer.id} beer={beer} />
-        ))}
+      <div>
+        <div className="prose mt-24 mx-auto text-center w-full">
+          <h1>Your favorite beers 💗</h1>
+        </div>
+        <div className="w-full grid mt-8 mb-16 grid-cols-masonry gap-x-8 auto-rows-masonry justify-center">
+          {favoriteBeers.data?.beers.map((beer) => (
+            <BeerCard key={beer.id} beer={beer} />
+          ))}
+        </div>
       </div>
     </Layout>
   );

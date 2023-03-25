@@ -1,6 +1,6 @@
 import useDebounce from "@/hooks/useDebounce";
 import { useSearchBeers } from "@/hooks/useSearch";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import { Input, Avatar, Link as DaisyLink } from "react-daisyui";
 import { SearchResult } from "./SearchResult";
@@ -30,7 +30,7 @@ export const Navbar = () => {
     <>
       <Overlay show={showInput} />
       <div className="max-w-full bg-yellow-400 shadow-sm flex items-center justify-between pl-12 pt-3 pb-3">
-        <Link href="/">
+        <Link href="/app">
           <Image
             height={48}
             width={48}
@@ -63,6 +63,16 @@ export const Navbar = () => {
                     <SearchResult key={beer.id} beer={beer} />
                   ))
                 : null}
+              {showInput && searchedBeers.data?.beers.length === 0 ? (
+                <motion.div
+                  className="bg-white w-full h-26 mt-2 rounded flex py-2"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                >
+                  <p className="ml-8">No results</p>
+                </motion.div>
+              ) : null}
             </AnimatePresence>
           </div>
         </div>

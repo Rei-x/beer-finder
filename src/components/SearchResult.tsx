@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import React from "react";
 import Image from "next/image";
 import { Beer } from "@/api/transformer";
-import { useRouter } from "next/router";
 import Link from "next/link";
 
 export const SearchResult = ({ beer }: { beer: Beer }) => {

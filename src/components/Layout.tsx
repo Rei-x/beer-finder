@@ -17,7 +17,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           <Navbar />
           <div className="block">{children}</div>
         </div>
-        <footer className="footer align-top justify-items-center mt-8 p-10 bg-base-200 text-base-content">
+        <footer className="footer align-top justify-items-center p-10 bg-base-200 text-base-content">
           <div>
             <span className="footer-title">Services</span>
             <a className="link link-hover">Branding</a>

@@ -42,8 +42,6 @@ export const fetchBeer = async ({
   const convertedBeers = Convert.toBeer(beers);
   const hasNextPage = convertedBeers.length === perPage;
 
-  console.log("hasNextPage", hasNextPage);
-
   return {
     beers: convertedBeers,
     nextPage: hasNextPage ? page + 1 : null,
