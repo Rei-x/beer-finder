@@ -17,7 +17,7 @@ const Hero = () => (
           <Button color="primary">Find your beer!</Button>
         </Link>
       </div>
-      <video autoPlay className="rounded-xl" loop>
+      <video autoPlay className="rounded-xl" loop muted>
         <source src="https://player.vimeo.com/external/465331247.sd.mp4?s=0383e83756e3e0365e1e5ccd29756dcaec6c5703&profile_id=164&oauth2_token_id=57447761" />
       </video>
     </div>
