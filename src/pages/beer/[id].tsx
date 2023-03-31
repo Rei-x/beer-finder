@@ -87,7 +87,7 @@ const Beer = ({
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
   const router = useRouter();
 
-  const imageWidth = beer.imageURL.includes("keg") ? 120 : 100;
+  const imageWidth = (beer.imageURL ?? "").includes("keg") ? 120 : 100;
 
   return (
     <Layout>
