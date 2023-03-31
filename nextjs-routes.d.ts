@@ -9,7 +9,9 @@ declare module "nextjs-routes" {
     | StaticRoute<"/app">
     | DynamicRoute<"/beer/[id]", { "id": string }>
     | StaticRoute<"/favorites">
-    | StaticRoute<"/">;
+    | StaticRoute<"/">
+    | DynamicRoute<"/page/[pageNumber]", { "pageNumber": string }>
+    | StaticRoute<"/wall">;
 
   interface StaticRoute<Pathname> {
     pathname: Pathname;

@@ -6,7 +6,7 @@ import {
 
 export const beersQueryKey = () => ["beers"];
 
-export const options = {
+export const defaultOptions = {
   queryKey: beersQueryKey(),
   queryFn: (data) => {
     return fetchBeer({
@@ -14,10 +14,10 @@ export const options = {
     });
   },
   getNextPageParam: (lastPage) => {
-    return (lastPage as { beers: []; nextPage: null | number }).nextPage;
+    return (lastPage as { beers: []; nextPage: null | number }).nextPage ?? 1;
   },
 } satisfies UseInfiniteQueryOptions;
 
-export const useBeers = () => {
-  return useInfiniteQuery(options);
+export const useBeers = (options?: typeof defaultOptions) => {
+  return useInfiniteQuery({ ...defaultOptions, ...options });
 };

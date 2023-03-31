@@ -7,9 +7,9 @@ import React from "react";
 import Image from "next/image";
 import { Ebc2Hex } from "@/lib/ebc2hex";
 import { GetColorName } from "hex-color-to-color-name";
-import { Card } from "react-daisyui";
-import { Link } from "@/components/Link";
+import { Card, Link } from "react-daisyui";
 import { imageClient } from "@/api/imageClient";
+import { useRouter } from "next/router";
 
 const Stats = ({ beer }: { beer: Beer }) => {
   return (
@@ -85,16 +85,40 @@ const Beer = ({
   beer,
   images,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
+  const router = useRouter();
+
+  const imageWidth = beer.imageURL.includes("keg") ? 120 : 100;
+
   return (
     <Layout>
       <div className="max-w-6xl mx-auto prose mt-12 pb-32">
-        <Link href="/app">Back</Link>
-        <div className="flex justify-between items-start pr-16">
-          <div className="max-w-5xl pr-16">
-            <h1>{beer.name}</h1>
-            <i>{beer.tagline}</i>
-            <p>{beer.description}</p>
-            <Stats beer={beer} />
+        <p
+          className="cursor-pointer hover:underline"
+          onClick={() => {
+            router.back();
+          }}
+        >
+          Back
+        </p>
+        <div className="flex justify-between items-start">
+          <div className="max-w-5xl">
+            <div className="flex justify-between">
+              <div className="pr-16 max-w-2xl">
+                <h1>{beer.name}</h1>
+                <i>{beer.tagline}</i>
+                <p className="text-justify">{beer.description}</p>
+                <Stats beer={beer} />
+              </div>
+              <div className="hover:scale-105 transition-all pr-16 hover:rotate-6">
+                <Image
+                  alt={beer.name}
+                  src={beer.imageURL}
+                  className="object-contain"
+                  width={imageWidth}
+                  height={120}
+                />
+              </div>
+            </div>
             <div>
               <h2>
                 {beer.foodPairing.length > 0
@@ -113,7 +137,7 @@ const Beer = ({
             </div>
             <h2>Brewers tips</h2>
             <blockquote>
-              <p className="text-xl italic font-medium leading-relaxed ">
+              <p className="text-xl italic font-medium max-w-2xl leading-relaxed ">
                 {beer.brewersTips}
               </p>
             </blockquote>
@@ -139,13 +163,6 @@ const Beer = ({
               <li>{beer.ingredients.yeast}</li>
             </ul>
           </div>
-          <Image
-            alt={beer.name}
-            src={beer.imageURL}
-            className="object-contain sticky top-10"
-            width={100}
-            height={160}
-          />
         </div>
       </div>
     </Layout>
@@ -187,6 +204,10 @@ export const getStaticProps = async (
   const { foodPairing } = firstBeer;
   let imagesForFoodPairings;
   try {
+    if (process.env.NODE_ENV === "development") {
+      throw new Error("DEV");
+    }
+
     imagesForFoodPairings = await Promise.all(
       foodPairing.slice(0, 3).map(async (food) => {
         const image = await imageClient.photos.search({

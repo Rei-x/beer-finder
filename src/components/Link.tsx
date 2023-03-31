@@ -4,7 +4,7 @@ import { Link as DaisyLink } from "react-daisyui";
 import { LinkProps } from "next/link";
 export const Link = ({ children, ...props }: LinkProps) => {
   return (
-    <NextLink {...props}>
+    <NextLink {...props} legacyBehavior>
       <DaisyLink>{children}</DaisyLink>
     </NextLink>
   );

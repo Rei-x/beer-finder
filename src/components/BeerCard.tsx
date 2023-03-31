@@ -7,6 +7,9 @@ import React, { SVGProps, useEffect, useState } from "react";
 import { Badge, Button, Card, Divider } from "react-daisyui";
 import { FavoriteButton } from "./FavoriteButton";
 import { HeartIcon } from "./HeartIcon";
+import NextImage from "next/image";
+
+import noImage from "../../public/noimage.png";
 
 const getHeight = (beer: Beer) => {
   const numberOfTitleCharacters = beer.name.trim().length;
@@ -52,7 +55,15 @@ const Overlay = ({
   );
 };
 
-export const BeerCard = ({ beer }: { beer: Beer }) => {
+export const BeerCard = ({
+  beer,
+  height,
+  placeholder,
+}: {
+  beer: Beer;
+  height?: number;
+  placeholder?: string;
+}) => {
   const [isHovering, setIsHovering] = useState(false);
   const { isFavorite } = useFavorite(beer.id);
 
@@ -60,7 +71,8 @@ export const BeerCard = ({ beer }: { beer: Beer }) => {
     <div
       className={`p-3 my-4 shadow-md overflow-hidden relative transition-all cursor-pointer`}
       style={{
-        gridRow: `span ${getHeight(beer)}`,
+        gridRow: height ? undefined : `span ${getHeight(beer)}`,
+        height: height ? `${height}px` : undefined,
       }}
     >
       <AnimatePresence>
@@ -96,15 +108,20 @@ export const BeerCard = ({ beer }: { beer: Beer }) => {
             />
           ) : null}
 
-          {beer.imageURL ? (
-            <div className="h-48">
-              <Card.Image
-                src={beer.imageURL}
-                alt="Card image background"
-                className="max-h-48 border-b object-contain border-gray-200 border-solid"
+          <div className="h-48 flex justify-center items-center">
+            <figure>
+              <NextImage
+                width={100}
+                height={192}
+                alt={beer.name + " photo"}
+                src={beer.imageURL ?? noImage}
+                placeholder={placeholder ? "blur" : "empty"}
+                blurDataURL={placeholder}
+                className="max-h-48 object-contain transition-all"
+                quality={1}
               />
-            </div>
-          ) : null}
+            </figure>
+          </div>
           <Divider className="h-0" />
           <Card.Title className="mt-3">{beer.name}</Card.Title>
           <Card.Body className="p-0">

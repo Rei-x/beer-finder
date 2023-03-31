@@ -26,7 +26,7 @@ export const fetchBeer = async ({
   }
 
   const params = new URLSearchParams({
-    page: page?.toString(),
+    page: page.toString() ?? "1",
     per_page: perPage?.toString(),
     ...additionalParams,
   });

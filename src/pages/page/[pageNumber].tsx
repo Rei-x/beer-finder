@@ -5,23 +5,18 @@ import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import { fetchBeer } from "@/api/fetchBeer";
 import { Button, Divider, Pagination } from "react-daisyui";
 import { atomWithHash } from "jotai-location";
-import { Router } from "next/router";
+import { Router, useRouter } from "next/router";
 import { useAtom } from "jotai";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { GetStaticPropsContext } from "next";
+import {
+  GetStaticPaths,
+  GetStaticPropsContext,
+  InferGetServerSidePropsType,
+} from "next";
 import { Link } from "@/components/Link";
-
-const pageAtom = atomWithHash("page", 1, {
-  subscribe: (callback) => {
-    Router.events.on("routeChangeComplete", callback);
-    window.addEventListener("hashchange", callback);
-    return () => {
-      Router.events.off("routeChangeComplete", callback);
-      window.removeEventListener("hashchange", callback);
-    };
-  },
-});
+import { RoutedQuery } from "nextjs-routes";
+import { getPlaiceholder } from "plaiceholder";
 
 const options = (pageParam: number, perPage: number) => ({
   queryKey: ["beers", pageParam, perPage],
@@ -96,18 +91,24 @@ const PagesButtons = ({
   );
 };
 
-export default function Home() {
-  const [page, setPage] = useAtom(pageAtom);
-  const perPage = 32;
-  const beers = useBeersPaginate({
-    pageParam: page,
-    perPage,
-  });
+const perPage = 32;
 
-  const [showSkeleton, setShowSkeleton] = useState(false);
+export default function Home({
+  beers,
+  nextPage,
+}: InferGetServerSidePropsType<typeof getStaticProps>) {
+  const router = useRouter<"/page/[pageNumber]">();
 
-  const isLastPage =
-    (beers.data?.beers.length ?? 0) < perPage && !beers.isFetching;
+  const page = parseInt(router.query.pageNumber ?? "1");
+
+  const setPage = (page: number) => {
+    router.push({
+      pathname: "/page/[pageNumber]",
+      query: {
+        pageNumber: page.toString(),
+      },
+    });
+  };
 
   return (
     <Layout>
@@ -117,7 +118,7 @@ export default function Home() {
           className="ml-12"
           page={page}
           setPage={setPage}
-          isLastPage={isLastPage}
+          isLastPage={!nextPage}
         />
         <Link href="/wall" className="block mt-4">
           Disable pagination
@@ -125,7 +126,7 @@ export default function Home() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4">
         <AnimatePresence mode="popLayout">
-          {beers.data?.beers.map((beer, i) => (
+          {beers.map((beer, i) => (
             <motion.div
               key={beer.id}
               initial={{ opacity: 0 }}
@@ -135,10 +136,16 @@ export default function Home() {
                 duration: 0.4,
               }}
             >
-              <BeerCard height={400} beer={beer} />
+              <BeerCard
+                height={400}
+                beer={beer}
+                placeholder={
+                  "placeholder" in beer ? beer.placeholder : undefined
+                }
+              />
             </motion.div>
           ))}
-          {!beers.data || beers.data.beers.length === 0
+          {!beers || beers.length === 0
             ? Array.from({ length: perPage }).map((_, i) => (
                 <motion.div
                   key={i + "placeholder"}
@@ -159,21 +166,85 @@ export default function Home() {
         className="mb-10"
         page={page}
         setPage={setPage}
-        isLastPage={isLastPage}
+        isLastPage={!nextPage}
       />
     </Layout>
   );
 }
 
-export async function getStaticProps(context: GetStaticPropsContext) {
-  const queryClient = new QueryClient();
-  console.log(context);
+export const getStaticPaths: GetStaticPaths<
+  RoutedQuery<"/page/[pageNumber]">
+> = async () => {
+  if (process.env.NODE_ENV === "development") {
+    return {
+      paths: [],
+      fallback: "blocking",
+    };
+  }
 
-  // await queryClient.prefetchQuery(options())
+  const beers = [];
+
+  let page = 1;
+
+  let { beers: beersPage, nextPage } = await fetchBeer({
+    page,
+    perPage,
+  });
+
+  beers.push(...beersPage);
+
+  while (nextPage) {
+    page++;
+
+    const { beers: beersPage, nextPage: nextPagePage } = await fetchBeer({
+      page,
+      perPage,
+    });
+    beers.push(...beersPage);
+    nextPage = nextPagePage;
+  }
+
+  const numberOfPages = Math.ceil(beers.length / perPage);
+
+  console.log(numberOfPages);
+
+  return {
+    paths: Array.from({ length: numberOfPages }).map((_, id) => ({
+      params: {
+        pageNumber: (id + 1).toString(),
+      },
+    })),
+    fallback: "blocking",
+  };
+};
+
+export async function getStaticProps(
+  context: GetStaticPropsContext<RoutedQuery<"/page/[pageNumber]">>
+) {
+  const page = parseInt(context.params?.pageNumber ?? "1");
+
+  const { beers, nextPage } = await fetchBeer({
+    page,
+    perPage,
+  });
+
+  const beersWithImages = await Promise.all(
+    beers.map(async (beer) => {
+      if (!beer.imageURL) return beer;
+
+      const placeholder = await getPlaiceholder(beer.imageURL);
+
+      return {
+        ...beer,
+        placeholder: placeholder.base64,
+      };
+    })
+  );
 
   return {
     props: {
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      nextPage,
+      beers: beersWithImages,
     },
   };
 }
