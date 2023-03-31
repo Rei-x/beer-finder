@@ -8,8 +8,8 @@ import "../styles/globals.css";
 import { useState } from "react";
 import { Provider } from "jotai";
 import { ScrollToTop } from "@/components/ScrollToTop";
-import NProgress from "nprogress"; //nprogress module
-import "nprogress/nprogress.css"; //styles of nprogress
+import NProgress from "nprogress";
+import "../styles/nprogress.css";
 import { Router } from "next/router";
 
 NProgress.configure({ showSpinner: false });
