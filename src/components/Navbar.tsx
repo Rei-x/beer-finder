@@ -29,7 +29,7 @@ export const Navbar = () => {
   return (
     <>
       <Overlay show={showInput} />
-      <div className="max-w-full bg-yellow-400 shadow-sm flex items-center justify-between pl-12 pt-3 pb-3">
+      <div className="max-w-full bg-yellow-400 shadow-sm flex items-center justify-between pl-2 md:pl-12 pt-3 pb-3">
         <Link
           href={{
             pathname: "/page/[pageNumber]",
@@ -83,7 +83,7 @@ export const Navbar = () => {
             </AnimatePresence>
           </div>
         </div>
-        <div className="mr-4">
+        <div className="mr-1 md:mr-4">
           <Link href="/favorites" legacyBehavior>
             <DaisyLink>Favorites</DaisyLink>
           </Link>

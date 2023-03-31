@@ -3,17 +3,19 @@ import { Beer } from "@/api/transformer";
 import { Layout } from "@/components/Layout";
 import { GetStaticPropsContext, InferGetServerSidePropsType } from "next";
 import { RoutedQuery } from "nextjs-routes";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Ebc2Hex } from "@/lib/ebc2hex";
 import { GetColorName } from "hex-color-to-color-name";
 import { Card, Link } from "react-daisyui";
 import { imageClient } from "@/api/imageClient";
 import { useRouter } from "next/router";
+import { IGetPlaiceholderReturn, getPlaiceholder } from "plaiceholder";
+import { FavoriteButton } from "@/components/FavoriteButton";
 
 const Stats = ({ beer }: { beer: Beer }) => {
   return (
-    <div className="stats shadow">
+    <div className="stats stats-vertical md:stats-horizontal shadow w-full md:w-auto">
       <div className="stat">
         <div className="stat-figure text-secondary">
           <svg
@@ -72,7 +74,7 @@ const Stats = ({ beer }: { beer: Beer }) => {
 
 const FoodCard = ({ name, image }: { name: string; image: string }) => {
   return (
-    <Card className="w-96 h-96" imageFull={true}>
+    <Card className="md:w-96 md:h-96" imageFull={true}>
       <Card.Image className="object-cover w-full h-3/4" src={image} />
       <Card.Body className="p-0 pl-4">
         <Card.Title className="mt-3">{name}</Card.Title>
@@ -83,49 +85,65 @@ const FoodCard = ({ name, image }: { name: string; image: string }) => {
 
 const Beer = ({
   beer,
+  placeholderImage,
   images,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
   const router = useRouter();
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   const imageWidth = (beer.imageURL ?? "").includes("keg") ? 120 : 100;
 
   return (
     <Layout>
-      <div className="max-w-6xl mx-auto prose mt-12 pb-32">
-        <p
-          className="cursor-pointer hover:underline"
-          onClick={() => {
-            router.back();
-          }}
-        >
-          Back
-        </p>
-        <div className="flex justify-between items-start">
-          <div className="max-w-5xl">
-            <div className="flex justify-between">
-              <div className="pr-16 max-w-2xl">
-                <h1>{beer.name}</h1>
-                <i>{beer.tagline}</i>
+      <div className="container px-4 md:mx-0 md:flex flex-col items-center mt-12 pb-32">
+        <div className="md:flex justify-between items-start">
+          <div className="md:max-w-5xl max-w-full">
+            <div className="md:flex justify-between items-center">
+              <div className="md:pr-16 prose">
+                <p
+                  className="cursor-pointer mr-auto hover:underline"
+                  onClick={() => {
+                    router.back();
+                  }}
+                >
+                  Back
+                </p>
+                <div className="flex justify-between">
+                  <div>
+                    <h1>{beer.name}</h1>
+                    <i>{beer.tagline}</i>
+                  </div>
+                  <FavoriteButton beerId={beer.id} />
+                </div>
                 <p className="text-justify">{beer.description}</p>
                 <Stats beer={beer} />
               </div>
-              <div className="hover:scale-105 transition-all pr-16 hover:rotate-6">
+              <div className="hover:scale-105 transition-all pr-16 hover:rotate-6 hidden md:block">
                 <Image
                   alt={beer.name}
                   src={beer.imageURL}
-                  className="object-contain"
+                  className={`object-contain transition-all duration-300 ${
+                    isImageLoaded ? "blur-0" : "blur-lg"
+                  }`}
+                  placeholder={placeholderImage ? "blur" : "empty"}
+                  blurDataURL={placeholderImage}
                   width={imageWidth}
-                  height={120}
+                  height={390}
+                  onLoad={() => {
+                    setIsImageLoaded(true);
+                  }}
                 />
               </div>
             </div>
             <div>
-              <h2>
-                {beer.foodPairing.length > 0
-                  ? "Pair with"
-                  : "No food pairing found"}
-              </h2>
-              <div className="flex gap-3 w-full mt-4 not-prose">
+              <div className="prose lg:prose-lg mt-8">
+                <h2>
+                  {beer.foodPairing.length > 0
+                    ? "Pair with"
+                    : "No food pairing found"}
+                </h2>
+              </div>
+              <div className="flex flex-col md:flex-row gap-3 w-full mt-4 not-prose">
                 {images.map((image) => (
                   <FoodCard
                     key={image.image}
@@ -135,33 +153,47 @@ const Beer = ({
                 ))}
               </div>
             </div>
-            <h2>Brewers tips</h2>
-            <blockquote>
-              <p className="text-xl italic font-medium max-w-2xl leading-relaxed ">
-                {beer.brewersTips}
-              </p>
-            </blockquote>
-            <h2>Ingredients</h2>
-            <h3>Hops</h3>
-            <ul>
-              {beer.ingredients.hops.map((hop) => (
-                <li key={hop.name}>
-                  {hop.name} ({hop.amount.value} {hop.amount.unit})
-                </li>
-              ))}
-            </ul>
-            <h3>Malt</h3>
-            <ul>
-              {beer.ingredients.malt.map((malt) => (
-                <li key={malt.name}>
-                  {malt.name} ({malt.amount.value} {malt.amount.unit})
-                </li>
-              ))}
-            </ul>
-            <h3>Yeast</h3>
-            <ul>
-              <li>{beer.ingredients.yeast}</li>
-            </ul>
+            <div className="mt-16">
+              <div className="prose  ">
+                <h2>Brewers tips</h2>
+                <blockquote>
+                  <p className="text-xl italic font-medium max-w-2xl leading-relaxed ">
+                    {beer.brewersTips}
+                  </p>
+                </blockquote>
+              </div>
+              <div className="prose  mt-16">
+                <h2>Ingredients</h2>
+              </div>
+              <div className="grid gap-6 md:gap-0 md:max-w-6xl mt-6 w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                <div className="prose ">
+                  <h3>Hops</h3>
+                  <ul>
+                    {beer.ingredients.hops.map((hop) => (
+                      <li key={hop.name}>
+                        {hop.name} ({hop.amount.value} {hop.amount.unit})
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="prose ">
+                  <h3>Malt</h3>
+                  <ul>
+                    {beer.ingredients.malt.map((malt) => (
+                      <li key={malt.name}>
+                        {malt.name} ({malt.amount.value} {malt.amount.unit})
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="prose ">
+                  <h3>Yeast</h3>
+                  <ul>
+                    <li>{beer.ingredients.yeast}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -257,9 +289,16 @@ export const getStaticProps = async (
     ];
   }
 
+  let placeholderImage: IGetPlaiceholderReturn | undefined;
+
+  if (firstBeer.imageURL) {
+    placeholderImage = await getPlaiceholder(firstBeer.imageURL);
+  }
+
   return {
     props: {
       beer: firstBeer,
+      placeholderImage: placeholderImage?.base64 ?? undefined,
       images: imagesForFoodPairings.filter((image) => !!image) as Array<{
         food: string;
         image: string;

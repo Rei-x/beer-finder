@@ -49,7 +49,7 @@ const Overlay = ({
       }}
     >
       <div className="h-full w-full flex justify-end items-start">
-        <FavoriteButton beerId={beer.id} />
+        <FavoriteButton className="m-2" beerId={beer.id} />
       </div>
     </motion.div>
   );

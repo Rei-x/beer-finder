@@ -26,7 +26,7 @@ export const SearchResult = ({ beer }: { beer: Beer }) => {
           <Image
             src={beer.imageURL}
             alt="piwko"
-            className="ml-8"
+            className="ml-8 object-contain"
             loading="lazy"
             width={16}
             height={16}

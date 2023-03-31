@@ -7,7 +7,7 @@ import NextImage from "next/image";
 
 const Hero = () => (
   <>
-    <div className="w-full mt-48 flex justify-evenly">
+    <div className="container px-2 md:px-0 mt-48 flex gap-8 flex-col md:gap-0 md:flex-row justify-evenly">
       <div className="max-w-md rounded my-auto">
         <h1 className="mb-5 text-5xl font-bold">BeerFinder 🍺</h1>
         <p className="mb-5 text-lg">
@@ -34,7 +34,7 @@ const Hero = () => (
       viewBox="0 0 900 600"
       width="900"
       height="600"
-      className="text-primary absolute top-24 left-96 -z-10"
+      className="text-primary absolute top-0 left-24 md:top-24 md:left-96 -z-10"
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
     >
@@ -78,11 +78,11 @@ const Hero = () => (
 
 const Features = () => (
   <div className="flex flex-col">
-    <h1 className="text-4xl font-bold mt-80 w-full text-center mb-16">
+    <h1 className="text-4xl font-bold mt-40 md:mt-64 w-full text-center mb-16">
       ⭐ Features ⭐
     </h1>
-    <div className="flex w-3/4 rounded-xl justify-evenly gap-16  relative mx-auto">
-      <Card className="w-96 bg-base-100 shadow-lg">
+    <div className="flex flex-col md:flex-row w-3/4 rounded-xl justify-evenly gap-16  relative mx-auto">
+      <Card className="md:w-96 bg-base-100 shadow-lg">
         <figure className="px-10 pt-10">
           <NextImage
             width={400}
@@ -152,7 +152,7 @@ const Features = () => (
 const Sharing = () => (
   <div className="relative">
     <motion.div
-      className="top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 absolute"
+      className="top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 absolute hidden md:block"
       animate={{ y: [0, 20, 0] }}
       transition={{
         repeat: Infinity,
@@ -162,7 +162,7 @@ const Sharing = () => (
       <NextImage src="/icons/facebook.png" width={50} height={50} alt="" />
     </motion.div>
     <motion.div
-      className="top-1/2 right-1/4 -translate-x-1/2 -translate-y-1/2 absolute"
+      className="top-1/2 right-1/4 -translate-x-1/2 -translate-y-1/2 absolute hidden md:block"
       animate={{ y: [0, 20, 0] }}
       transition={{
         repeat: Infinity,
@@ -173,7 +173,7 @@ const Sharing = () => (
       <NextImage src="/icons/twitter.png" width={50} height={50} alt="" />
     </motion.div>
     <motion.div
-      className="-translate-x-1/2 -translate-y-1/2 absolute"
+      className="-translate-x-1/2 -translate-y-1/2 absolute hidden md:block"
       animate={{ y: [0, 20, 0] }}
       transition={{
         repeat: Infinity,
@@ -188,7 +188,7 @@ const Sharing = () => (
       <NextImage src="/icons/instagram.png" width={50} height={50} alt="" />
     </motion.div>
     <motion.div
-      className="-translate-x-1/2 -translate-y-1/2 absolute"
+      className="-translate-x-1/2 -translate-y-1/2 absolute hidden md:block"
       animate={{ y: [0, 20, 0] }}
       transition={{
         repeat: Infinity,
@@ -203,7 +203,7 @@ const Sharing = () => (
       <NextImage src="/icons/whatsapp.png" width={50} height={50} alt="" />
     </motion.div>
     <motion.div
-      className="-translate-x-1/2 -translate-y-1/2 absolute"
+      className="-translate-x-1/2 -translate-y-1/2 absolute hidden md:block"
       animate={{ y: [0, 20, 0] }}
       transition={{
         repeat: Infinity,
@@ -218,7 +218,7 @@ const Sharing = () => (
       <NextImage src="/icons/pinterest.png" width={50} height={50} alt="" />
     </motion.div>
     <motion.div
-      className="-translate-x-1/2 -translate-y-1/2 absolute"
+      className="-translate-x-1/2 -translate-y-1/2 absolute hidden md:block"
       animate={{ y: [0, 20, 0] }}
       transition={{
         repeat: Infinity,
@@ -235,7 +235,7 @@ const Sharing = () => (
     <div className="prose text-center w-full mx-auto mt-36 mb-10">
       <h2>Share with your friends!</h2>
     </div>
-    <div className="w-2/5 mx-auto shadow-lg rounded-xl p-8 bg-[#fdfdfd] no-prose">
+    <div className="w-full md:w-2/5 md:mx-auto shadow-lg rounded-xl p-8 bg-[#fdfdfd] no-prose">
       <div className="chat chat-start">
         <div className="chat-image avatar">
           <div className="w-10 rounded-full">
@@ -284,7 +284,7 @@ const JoinNow = () => (
         strokeLinejoin="miter"
       />
     </svg>
-    <div className="flex flex-col bg-secondary p-32 pb-64">
+    <div className="flex flex-col bg-secondary md:p-32 pb-64">
       <div className="prose text-center mt-20 w-full mx-auto">
         <h1>Join us now!</h1>
       </div>
@@ -310,7 +310,7 @@ const JoinNow = () => (
           <div className="stat-desc">21% more than last month</div>
         </div>
 
-        <div className="stat">
+        <div className="hidden md:stat">
           <div className="stat-figure text-secondary">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -331,7 +331,7 @@ const JoinNow = () => (
           <div className="stat-desc">And still growing!</div>
         </div>
 
-        <div className="stat">
+        <div className=" hidden md:stat">
           <div className="stat-figure text-secondary">
             <div>
               <div className="w-16 rounded-full">
@@ -367,7 +367,7 @@ const JoinNow = () => (
 const Landing = () => {
   return (
     <Layout>
-      <div className="min-h-fit flex flex-col justify-center">
+      <div className="min-h-fit flex flex-col justify-center overflow-hidden relative">
         <Hero />
         <Features />
         <Sharing />

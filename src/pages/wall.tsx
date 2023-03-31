@@ -13,7 +13,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="w-full mt-4 flex justify-end pr-4">
+      <div className="w-full mt-4 flex justify-end h-12 items-center pr-4">
         <Link
           href={{
             pathname: "/page/[pageNumber]",
@@ -26,7 +26,7 @@ export default function Home() {
           Enable pagination
         </Link>
       </div>
-      <div className="mt-14">
+      <div className="mt-6">
         <MasonryGrid
           next={() => {
             beers.fetchNextPage();

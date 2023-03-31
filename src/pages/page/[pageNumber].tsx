@@ -1,14 +1,9 @@
-import { defaultOptions } from "@/hooks/useBeers";
 import { BeerCard } from "@/components/BeerCard";
 import { Layout } from "@/components/Layout";
-import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import { fetchBeer } from "@/api/fetchBeer";
-import { Button, Divider, Pagination } from "react-daisyui";
-import { atomWithHash } from "jotai-location";
-import { Router, useRouter } from "next/router";
-import { useAtom } from "jotai";
+import { Button, Pagination } from "react-daisyui";
+import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
 import {
   GetStaticPaths,
   GetStaticPropsContext,
@@ -17,41 +12,6 @@ import {
 import { Link } from "@/components/Link";
 import { RoutedQuery } from "nextjs-routes";
 import { getPlaiceholder } from "plaiceholder";
-
-const options = (pageParam: number, perPage: number) => ({
-  queryKey: ["beers", pageParam, perPage],
-  queryFn: () =>
-    fetchBeer({
-      page: pageParam,
-      perPage,
-    }),
-});
-
-const useBeersPaginate = ({ pageParam = 1, perPage = 10 }) => {
-  return useQuery(options(pageParam, perPage));
-};
-
-const Skeleton = () => (
-  <div
-    role="status"
-    className="space-y-8 my-4 animate-pulse shadow-lg p-3 md:flex flex-col items-center"
-    style={{ height: 400 }}
-  >
-    <div className="w-full">
-      <div className="h-4 bg-gray-200 rounded-full  w-10"></div>
-      <div className="flex items-center mx-auto justify-center w-1/4 h-48 bg-gray-300 rounded"></div>
-    </div>
-    <Divider className="h-0" />
-    <div className="w-full">
-      <div className="h-2.5 bg-gray-200 rounded-full  w-1/2 mb-4"></div>
-      <div className="h-2 bg-gray-200 rounded-full w-full mb-2.5"></div>
-      <div className="h-2 bg-gray-200 rounded-full  mb-2.5"></div>
-      <div className="h-2 bg-gray-200 rounded-full  w-full mb-2.5"></div>
-      <div className="h-2 bg-gray-200 rounded-full  w-full mb-2.5"></div>
-    </div>
-    <span className="sr-only">Loading...</span>
-  </div>
-);
 
 const PagesButtons = ({
   page,
@@ -112,7 +72,7 @@ export default function Home({
 
   return (
     <Layout>
-      <div className="flex mt-4 justify-between mx-4">
+      <div className="mt-4 justify-between items-center mx-4 hidden md:flex">
         <div />
         <PagesButtons
           className="ml-12"
@@ -120,9 +80,7 @@ export default function Home({
           setPage={setPage}
           isLastPage={!nextPage}
         />
-        <Link href="/wall" className="block mt-4">
-          Disable pagination
-        </Link>
+        <Link href="/wall">Disable pagination</Link>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4">
         <AnimatePresence mode="popLayout">
@@ -145,21 +103,6 @@ export default function Home({
               />
             </motion.div>
           ))}
-          {!beers || beers.length === 0
-            ? Array.from({ length: perPage }).map((_, i) => (
-                <motion.div
-                  key={i + "placeholder"}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{
-                    duration: 0.4,
-                  }}
-                >
-                  <Skeleton />
-                </motion.div>
-              ))
-            : null}
         </AnimatePresence>
       </div>
       <PagesButtons
@@ -205,8 +148,6 @@ export const getStaticPaths: GetStaticPaths<
   }
 
   const numberOfPages = Math.ceil(beers.length / perPage);
-
-  console.log(numberOfPages);
 
   return {
     paths: Array.from({ length: numberOfPages }).map((_, id) => ({
