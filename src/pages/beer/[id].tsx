@@ -182,6 +182,8 @@ export const getStaticProps = async (
     };
   }
 
+  let shouldRevalidate = false;
+
   const { foodPairing } = firstBeer;
   let imagesForFoodPairings;
   try {
@@ -211,6 +213,10 @@ export const getStaticProps = async (
       })
     );
   } catch {
+    console.log("ERROR IN IMAGE FETCH");
+
+    shouldRevalidate = true;
+
     imagesForFoodPairings = [
       {
         food: "Crusty bread",
@@ -238,5 +244,6 @@ export const getStaticProps = async (
         image: string;
       }>,
     },
+    revalidate: shouldRevalidate ? 60 : false,
   };
 };
