@@ -30,7 +30,14 @@ export const Navbar = () => {
     <>
       <Overlay show={showInput} />
       <div className="max-w-full bg-yellow-400 shadow-sm flex items-center justify-between pl-12 pt-3 pb-3">
-        <Link href="/app">
+        <Link
+          href={{
+            pathname: "/page/[pageNumber]",
+            query: {
+              pageNumber: "1",
+            },
+          }}
+        >
           <Image
             height={48}
             width={48}

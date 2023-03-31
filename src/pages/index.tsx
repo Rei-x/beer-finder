@@ -14,7 +14,12 @@ const Hero = () => (
           Find your perfect beer with just a few clicks! <br />
           <i>Taste the unforgettable.</i>
         </p>
-        <Link href="/app">
+        <Link
+          href={{
+            pathname: "/page/[pageNumber]",
+            query: { pageNumber: "1" },
+          }}
+        >
           <Button color="secondary" size="lg">
             Find your beer!
           </Button>
@@ -39,7 +44,7 @@ const Hero = () => (
             d="M84.2 -66C103.5 -43 109.5 -8.3 102.6 24C95.7 56.3 75.8 86.3 48.2 99.3C20.5 112.3 -14.9 108.5 -44.2 93.7C-73.5 78.9 -96.6 53.1 -104.6 22.6C-112.7 -8 -105.6 -43.3 -85.7 -66.4C-65.7 -89.5 -32.9 -100.4 -0.2 -100.3C32.5 -100.1 65 -88.9 84.2 -66Z"
             stroke="currentColor"
             fill="none"
-            stroke-width="20"
+            strokeWidth="20"
           ></path>
         </g>
         <g transform="translate(766 466)">
@@ -47,7 +52,7 @@ const Hero = () => (
             d="M79.6 -63.1C98.6 -39.8 106 -7 99.8 23.8C93.6 54.6 73.7 83.2 46.3 96.7C18.8 110.1 -16.3 108.4 -42.2 93.6C-68.1 78.8 -84.9 51 -93.2 19.8C-101.4 -11.4 -101.2 -45.9 -84.3 -68.8C-67.3 -91.6 -33.7 -102.7 -1.6 -101.4C30.4 -100.1 60.7 -86.4 79.6 -63.1Z"
             stroke="currentColor"
             fill="none"
-            stroke-width="20"
+            strokeWidth="20"
           ></path>
         </g>
         <g transform="translate(608 213)">
@@ -55,7 +60,7 @@ const Hero = () => (
             d="M69.3 -54.5C84.5 -36.2 87.9 -7.7 82.6 20.1C77.2 47.9 63.2 75 40 88C16.8 101.1 -15.5 100.2 -42.3 87.4C-69.1 74.7 -90.5 50.1 -95.5 23.2C-100.5 -3.7 -89.2 -32.9 -70.5 -52C-51.9 -71.1 -25.9 -80.1 0.5 -80.6C27 -81 54.1 -72.8 69.3 -54.5Z"
             stroke="currentColor"
             fill="none"
-            stroke-width="20"
+            strokeWidth="20"
           ></path>
         </g>
         <g transform="translate(136 137)">
@@ -63,7 +68,7 @@ const Hero = () => (
             d="M42.1 -35C50.7 -22.8 51 -5.6 46.6 9.3C42.2 24.2 32.9 36.7 19.7 44.4C6.5 52.1 -10.7 55.1 -25.4 49.3C-40 43.6 -52.1 29.1 -55.5 13C-59 -3.1 -53.8 -20.9 -43.1 -33.6C-32.4 -46.3 -16.2 -53.8 0.3 -54.1C16.8 -54.3 33.6 -47.2 42.1 -35Z"
             stroke="currentColor"
             fill="none"
-            stroke-width="20"
+            strokeWidth="20"
           ></path>
         </g>
       </g>
@@ -342,7 +347,15 @@ const JoinNow = () => (
           <div className="stat-desc">You can&apos;t go wrong!</div>
         </div>
       </div>
-      <Link href="/app" className="mx-auto mt-10">
+      <Link
+        href={{
+          pathname: "/page/[pageNumber]",
+          query: {
+            pageNumber: "1",
+          },
+        }}
+        className="mx-auto mt-10"
+      >
         <Button className="w-56" size="lg" color="primary">
           LET&apos;S SEE 👀
         </Button>

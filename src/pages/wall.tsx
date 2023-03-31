@@ -14,7 +14,15 @@ export default function Home() {
   return (
     <Layout>
       <div className="w-full mt-4 flex justify-end pr-4">
-        <Link href="/app" className="mt-4">
+        <Link
+          href={{
+            pathname: "/page/[pageNumber]",
+            query: {
+              pageNumber: "1",
+            },
+          }}
+          className="mt-4"
+        >
           Enable pagination
         </Link>
       </div>
