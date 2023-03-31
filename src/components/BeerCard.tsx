@@ -65,6 +65,7 @@ export const BeerCard = ({
   placeholder?: string;
 }) => {
   const [isHovering, setIsHovering] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const { isFavorite } = useFavorite(beer.id);
 
   return (
@@ -117,8 +118,13 @@ export const BeerCard = ({
                 src={beer.imageURL ?? noImage}
                 placeholder={placeholder ? "blur" : "empty"}
                 blurDataURL={placeholder}
-                className="max-h-48 object-contain transition-all"
+                className={`max-h-48 object-contain transition-all duration-300 ${
+                  isImageLoaded ? "blur-0" : "blur-lg"
+                }`}
                 quality={1}
+                onLoad={() => {
+                  setIsImageLoaded(true);
+                }}
               />
             </figure>
           </div>
