@@ -25,7 +25,14 @@ const Hero = () => (
           </Button>
         </Link>
       </div>
-      <video autoPlay className="rounded-xl shadow-lg" loop muted>
+      <video
+        autoPlay
+        className="rounded-xl shadow-lg aspect-auto"
+        width="640"
+        height="360"
+        loop
+        muted
+      >
         <source src="https://player.vimeo.com/external/465331247.sd.mp4?s=0383e83756e3e0365e1e5ccd29756dcaec6c5703&profile_id=164&oauth2_token_id=57447761" />
       </video>
     </div>
