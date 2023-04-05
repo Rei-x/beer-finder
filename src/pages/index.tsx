@@ -7,7 +7,7 @@ import NextImage from "next/image";
 
 const Hero = () => (
   <>
-    <div className="container px-2 md:px-0 mt-48 flex gap-8 flex-col md:gap-0 md:flex-row justify-evenly">
+    <div className="container px-2 md:px-0 mx-auto mt-48 flex gap-8 flex-col md:gap-0 md:flex-row justify-evenly">
       <div className="max-w-md rounded my-auto">
         <h1 className="mb-5 text-5xl font-bold">BeerFinder 🍺</h1>
         <p className="mb-5 text-lg">
