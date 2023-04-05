@@ -7,11 +7,12 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Ebc2Hex } from "@/lib/ebc2hex";
 import { GetColorName } from "hex-color-to-color-name";
-import { Card, Link } from "react-daisyui";
+import { Card } from "react-daisyui";
 import { imageClient } from "@/api/imageClient";
 import { useRouter } from "next/router";
 import { IGetPlaiceholderReturn, getPlaiceholder } from "plaiceholder";
 import { FavoriteButton } from "@/components/FavoriteButton";
+import noImage from "../.././../public/noimage.png";
 
 const Stats = ({ beer }: { beer: Beer }) => {
   return (
@@ -121,12 +122,16 @@ const Beer = ({
               <div className="hover:scale-105 transition-all pr-16 hover:rotate-6 hidden md:block">
                 <Image
                   alt={beer.name}
-                  src={beer.imageURL}
+                  src={beer.imageURL ?? noImage}
                   className={`object-contain transition-all duration-300 ${
                     isImageLoaded ? "blur-0" : "blur-lg"
                   }`}
-                  placeholder={placeholderImage ? "blur" : "empty"}
-                  blurDataURL={placeholderImage}
+                  placeholder={"blur"}
+                  blurDataURL={
+                    typeof placeholderImage === "string"
+                      ? placeholderImage
+                      : undefined
+                  }
                   width={imageWidth}
                   height={390}
                   onLoad={() => {
@@ -289,16 +294,16 @@ export const getStaticProps = async (
     ];
   }
 
-  let placeholderImage: IGetPlaiceholderReturn | undefined;
+  let placeholderImage: IGetPlaiceholderReturn | null = null;
 
-  if (firstBeer.imageURL) {
+  if (!!firstBeer.imageURL) {
     placeholderImage = await getPlaiceholder(firstBeer.imageURL);
   }
 
   return {
     props: {
       beer: firstBeer,
-      placeholderImage: placeholderImage?.base64 ?? undefined,
+      placeholderImage: placeholderImage?.base64 ?? null,
       images: imagesForFoodPairings.filter((image) => !!image) as Array<{
         food: string;
         image: string;
